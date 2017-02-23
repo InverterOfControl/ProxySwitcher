@@ -10,32 +10,33 @@ namespace ProxySwitcher
         /// </summary>
         bool isSettingsOpen = false;
 
+        private ToolStripMenuItem enableItem;
+        private ToolStripMenuItem disableItem;
+
         /// <summary>
         /// Creates this instance.
         /// </summary>
         /// <returns>ContextMenuStrip</returns>
         public ContextMenuStrip Create()
         {
-            bool isProxyEnabled = ProxyControl.IsProxyEnabled();
-        
             // Add the default menu options.
             ContextMenuStrip menu = new ContextMenuStrip();
             ToolStripMenuItem item;
             ToolStripSeparator sep;
 
             // Enable the proxy.
-            item = new ToolStripMenuItem();
-            item.Text = "Enable";
-            item.Click += new EventHandler(Enable_Click);
-            item.Enabled = !isProxyEnabled;
-            menu.Items.Add(item);
+            enableItem = new ToolStripMenuItem();
+            enableItem.Text = "Enable";
+            enableItem.Click += new EventHandler(Enable_Click);
+            enableItem.Enabled = !ProxyControl.IsProxyEnabled();
+            menu.Items.Add(enableItem);
 
             // Disable the proxy.
-            item = new ToolStripMenuItem();
-            item.Text = "Disable";
-            item.Click += new EventHandler(Disable_Click);
-            item.Enabled = isProxyEnabled;
-            menu.Items.Add(item);
+            disableItem = new ToolStripMenuItem();
+            disableItem.Text = "Disable";
+            disableItem.Click += new EventHandler(Disable_Click);
+            disableItem.Enabled = ProxyControl.IsProxyEnabled();
+            menu.Items.Add(disableItem);
 
             // Separator.
             sep = new ToolStripSeparator();
@@ -63,6 +64,8 @@ namespace ProxySwitcher
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void Enable_Click(object sender, EventArgs e)
         {
+            enableItem.Enabled = !enableItem.Enabled;
+            disableItem.Enabled = !disableItem.Enabled;
             ProxyControl.SetProxyStatus(true);
         }
 
@@ -73,6 +76,8 @@ namespace ProxySwitcher
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         void Disable_Click(object sender, EventArgs e)
         {
+            enableItem.Enabled = !enableItem.Enabled;
+            disableItem.Enabled = !disableItem.Enabled;
             ProxyControl.SetProxyStatus(false);
         }
 

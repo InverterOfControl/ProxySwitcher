@@ -22,6 +22,7 @@ namespace ProxySwitcher
         const string subkey = "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings";
         const string keyName = userRoot + "\\" + subkey;
 
+        public static bool ProxyEnabled { get; set; }
 
         public static bool IsProxyEnabled()
         {
@@ -33,13 +34,12 @@ namespace ProxySwitcher
         public static void SetProxy(ProxyEntry proxy)
         {
             Registry.SetValue(keyName, "ProxyServer", proxy.ToString());
-
             ensureRefresh();
         }
 
         public static void SetProxyStatus(bool enable)
         {
-            Registry.SetValue(keyName, "ProxyEnable", enable ? "1" : "0");
+            Registry.SetValue(keyName, "ProxyEnable", enable, RegistryValueKind.DWord);
             ensureRefresh();
         }
 
@@ -51,7 +51,7 @@ namespace ProxySwitcher
         private static void ensureRefresh()
         {
             // These lines implement the Interface in the beginning of program 
-            // They cause the OS to refresh the settings, causing IP to realy update
+            // They cause the OS to refresh the settings, causing IP to really update
             InternetSetOption(IntPtr.Zero, INTERNET_OPTION_SETTINGS_CHANGED, IntPtr.Zero, 0);
             InternetSetOption(IntPtr.Zero, INTERNET_OPTION_REFRESH, IntPtr.Zero, 0);
         }
